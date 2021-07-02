@@ -3,8 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-import models.Car;
-import models.Room;
+import model.Car;
+import model.Room;
 
 public class App {
     public static void main(String[] args) throws Exception {
