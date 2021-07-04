@@ -1,10 +1,8 @@
 ## Getting Started
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Welcome to the Car simulator made with Java
 
-When started the simulation it will:
-
-## Ask the user about the size of the room.
+## The application will ask the user about the size of the room.
 This is inputted with two integers separated with a space.
 ## Ask the user about starting position and heading of the RC car.
 This is inputted with two integers and one letter separated with spaces. The letter can be N, S, W or E.
