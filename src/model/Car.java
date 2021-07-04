@@ -1,7 +1,7 @@
 package model;
 public class Car {
 
-    String destination;
+    String direction;
     Integer x;
     Integer y;
 
@@ -21,12 +21,12 @@ public class Car {
         this.y = y;
     }
 
-    public String getDestination() {
-        return this.destination;
+    public String getDirection() {
+        return this.direction;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 
 }

@@ -73,7 +73,7 @@ public class Simulator {
                 if (isNumeric(startDest[0]) && isNumeric(startDest[1]) && isDestination(startDest[2])) {
                     car.setX(Integer.parseInt(startDest[0]));
                     car.setY(Integer.parseInt(startDest[1]));
-                    car.setDestination(startDest[2].toUpperCase());
+                    car.setDirection(startDest[2].toUpperCase());
                     isCorrect = true;
                 } else {
                     System.out.println(wrongInput);
@@ -136,7 +136,7 @@ public class Simulator {
         } else {
             System.out.println("Success!");
             System.out.println("Your car stopped at:" + "(" + car.getX() + "," + car.getY() + ") With the direction: "
-                    + car.getDestination() + " which is inside of the room with size(" + room.getX() + "," + room.getY()
+                    + car.getDirection() + " which is inside of the room with size(" + room.getX() + "," + room.getY()
                     + ")");
         }
     }
@@ -159,7 +159,7 @@ public class Simulator {
      * the user have chosen.
      */
     private Car move(String turn, Car car) {
-        String direction = car.getDestination();
+        String direction = car.getDirection();
         switch (direction) {
             case "N":
                 if (turn.equals("F")) {
@@ -190,7 +190,7 @@ public class Simulator {
                 }
                 break;
         }
-        car.setDestination(direction);
+        car.setDirection(direction);
         return car;
 
     }
@@ -206,7 +206,7 @@ public class Simulator {
      */
 
     private Car switchDirection(String turn, Car car) {
-        String direction = car.getDestination();
+        String direction = car.getDirection();
         switch (direction) {
             case "N":
                 if (turn.equals("L"))
@@ -234,7 +234,7 @@ public class Simulator {
                 break;
 
         }
-        car.setDestination(direction);
+        car.setDirection(direction);
         return car;
     }
 }
