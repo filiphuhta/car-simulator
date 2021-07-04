@@ -152,8 +152,8 @@ public class Simulator {
 
     /**
      * 
-     * @String input parameter turn user turn which can be F(Forward) & B(Back)
-     * @Car input parameter car The current car object with direction and X,Y cordinates.
+     * @String input parameter turn, user turn which can be F(Forward) & B(Back)
+     * @Car input parameter car, the current car object with direction and X,Y cordinates.
      * 
      * The function returns Car object with new X,Y cordinates based on which turn 
      * the user have chosen.
@@ -197,8 +197,8 @@ public class Simulator {
 
      /**
      * 
-     * @String input parameter turn which can be F(Forward) & B(Back)
-     * @String input parameter car The current car object with direction and X,Y cordinates.
+     * @String input parameter turn, which can be F(Forward) & B(Back)
+     * @Car input parameter car, the current car object with direction and X,Y cordinates.
      * 
      * The function returns Car object with new direction based on the turn the user
      * has chosen.
