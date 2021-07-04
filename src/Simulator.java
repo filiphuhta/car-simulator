@@ -8,14 +8,16 @@ import model.Room;
 
 public class Simulator {
 
-/**
- * Get the user input about the room size and the starting
- * destionation of the car.
- * 
- */
+    private boolean isCrashed = false;
+
+    /**
+     * Get the user input about the room size and the starting destionation of the
+     * car.
+     * 
+     */
     public void startSimulator() throws IOException {
         var room = setRoomSize();
-        var car =  setStartDest();
+        var car = setStartDest();
         runSimulation(car, room);
     }
 
@@ -99,9 +101,9 @@ public class Simulator {
         BufferedReader standardInput = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Input car simulation commands in series. Available commands are F, B, L or R.");
         String simulationInput = standardInput.readLine();
-        char arr[] = simulationInput.toUpperCase().toCharArray(); // convert the String object to array of char
-        Car carAfterSimulation = simulationAlgorithm(car, arr);
-        checkIfCrash(carAfterSimulation, room);
+        char arr[] = simulationInput.toUpperCase().toCharArray();
+        Car carAfterSimulation = simulationAlgorithm(car, arr, room);
+        printResult(carAfterSimulation, room);
 
     }
 
@@ -112,14 +114,16 @@ public class Simulator {
      * After the method has gone through all commands from the user, the method
      * stops and returns a Car with the end destination
      */
-    private Car simulationAlgorithm(Car car, char[] arr) {
+    private Car simulationAlgorithm(Car car, char[] arr, Room room) {
         for (char c : arr) {
             String turn = String.valueOf(c);
-            if (turn.equals("L") || turn.equals("R")) {
-                car = switchDirection(turn, car);
-            }
-            if (turn.equals("F") || turn.equals("B")) {
-                car = move(turn, car);
+            if (!isCrashed) {
+                if (turn.equals("L") || turn.equals("R")) {
+                    car = switchDirection(turn, car);
+                }
+                if (turn.equals("F") || turn.equals("B")) {
+                    car = move(turn, car, room);
+                }
             }
 
         }
@@ -129,10 +133,11 @@ public class Simulator {
     /**
      * Checks if the car is inside of the room or if it has crashed in to the wall.
      */
-    private void checkIfCrash(Car car, Room room) {
-        if (car.getX() < 0 || car.getY() < 0 || car.getX() > room.getX() || car.getY() > room.getY()) {
+    private void printResult(Car car, Room room) {
+        if (isCrashed) {
             System.out.println("Failure!");
-            System.out.println("The car did hit the wall in the simulation!");
+            System.out.println("The car did hit the wall in the simulation at: " + "(" + car.getX() + "," + car.getY()
+                    + ") With the direction: " + car.getDirection() + "!");
         } else {
             System.out.println("Success!");
             System.out.println("Your car stopped at:" + "(" + car.getX() + "," + car.getY() + ") With the direction: "
@@ -153,40 +158,61 @@ public class Simulator {
     /**
      * 
      * @String input parameter turn, user turn which can be F(Forward) & B(Back)
-     * @Car input parameter car, the current car object with direction and X,Y cordinates.
+     * @Car input parameter car, the current car object with direction and X,Y
+     *      cordinates.
      * 
-     * The function returns Car object with new X,Y cordinates based on which turn 
-     * the user have chosen.
+     *      The function returns Car object with new X,Y cordinates based on which
+     *      turn the user have chosen.
      */
-    private Car move(String turn, Car car) {
+    private Car move(String turn, Car car, Room room) {
         String direction = car.getDirection();
         switch (direction) {
             case "N":
-                if (turn.equals("F")) {
+                if (turn.equals("F") && car.getY() != room.getY()) {
                     car.setY(car.getY() + 1);
                 } else {
+                    isCrashed = true;
+                }
+                if (car.getY() != 0) {
                     car.setY(car.getY() - 1);
+                } else {
+                    isCrashed = true;
                 }
                 break;
             case "S":
-                if (turn.equals("F")) {
+                if (turn.equals("F") && car.getY() != 0) {
                     car.setY(car.getY() - 1);
                 } else {
+                    isCrashed = true;
+                }
+                if (car.getY() != room.getY()) {
                     car.setY(car.getY() + 1);
+                } else {
+                    isCrashed = true;
                 }
                 break;
             case "W":
-                if (turn.equals("F")) {
+                if (turn.equals("F") && car.getX() != 0) {
                     car.setX(car.getX() - 1);
                 } else {
+                    isCrashed = true;
+                }
+                if (car.getX() != room.getX()) {
                     car.setX(car.getX() + 1);
+                } else {
+                    isCrashed = true;
                 }
                 break;
             case "E":
-                if (turn.equals("F")) {
+                if (turn.equals("F") && car.getX() != room.getX()) {
                     car.setX(car.getX() + 1);
                 } else {
+                    isCrashed = true;
+                }
+                if (car.getX() != 0) {
                     car.setX(car.getX() - 1);
+                } else {
+                    isCrashed = true;
                 }
                 break;
         }
@@ -195,13 +221,14 @@ public class Simulator {
 
     }
 
-     /**
+    /**
      * 
      * @String input parameter turn, which can be F(Forward) & B(Back)
-     * @Car input parameter car, the current car object with direction and X,Y cordinates.
+     * @Car input parameter car, the current car object with direction and X,Y
+     *      cordinates.
      * 
-     * The function returns Car object with new direction based on the turn the user
-     * has chosen.
+     *      The function returns Car object with new direction based on the turn the
+     *      user has chosen.
      * 
      */
 
