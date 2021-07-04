@@ -8,13 +8,24 @@ import model.Room;
 
 public class Simulator {
 
+/**
+ * Get the user input about the room size and the starting
+ * destionation of the car.
+ * 
+ */
+    public void startSimulator() throws IOException {
+        var room = setRoomSize();
+        var car =  setStartDest();
+        runSimulation(car, room);
+    }
+
     /**
      * Ask user for the room size which should be writed in the format (4 6).
      * 
      * If it was wrong format it will ask the user again until the user have writed
      * the correct input.
      */
-    public Room setRoomSize() throws IOException {
+    private Room setRoomSize() throws IOException {
         BufferedReader standardInput = new BufferedReader(new InputStreamReader(System.in));
         String wrongInput = "The input must be written with two integers separated with a space. Example: 4 10";
         boolean isCorrect = false;
@@ -49,7 +60,7 @@ public class Simulator {
      * If it was wrong format it will ask the user again until the user have writed
      * the correct input.
      */
-    public Car setStartDest() throws IOException {
+    private Car setStartDest() throws IOException {
         BufferedReader standardInput = new BufferedReader(new InputStreamReader(System.in));
         String wrongInput = "This input must be two integers and one letter separated with spaces. The letter can be N, S, W or E.";
         boolean isCorrect = false;
@@ -84,7 +95,7 @@ public class Simulator {
      * When simulation is done it checks if the car has crashed in to the wall or
      * not.
      */
-    public void runSimulation(Car car, Room room) throws IOException {
+    private void runSimulation(Car car, Room room) throws IOException {
         BufferedReader standardInput = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Input car simulation commands in series. Available commands are F, B, L or R.");
         String simulationInput = standardInput.readLine();
