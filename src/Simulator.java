@@ -100,7 +100,7 @@ public class Simulator {
         printResult();
 
     }
-    
+
     private void simulationAlgorithm(char[] arr) {
         for (char c : arr) {
             String turn = String.valueOf(c);
