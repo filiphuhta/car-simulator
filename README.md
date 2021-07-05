@@ -2,7 +2,7 @@
 
 Welcome to the Car simulator made with Java
 
-## When running the application main in App.java the execution order will be:
+`When running the application main in App.java the execution order will be:`
 
 ## The application will ask the user about the size of the room.
 This is inputted with two integers separated with a space.
