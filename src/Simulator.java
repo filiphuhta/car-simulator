@@ -100,12 +100,7 @@ public class Simulator {
         printResult();
 
     }
-
-    /**
-     * Takes in the the commands in a char array and runs it through the simulation
-     * algorithm.
-     * 
-     */
+    
     private void simulationAlgorithm(char[] arr) {
         for (char c : arr) {
             String turn = String.valueOf(c);
