@@ -3,14 +3,14 @@ package model;
 public class Car {
 
     String direction;
-    Integer x;
-    Integer y;
+    int x;
+    int y;
 
     public Integer getX() {
         return this.x;
     }
 
-    public void setX(Integer x) {
+    public void setX(int x) {
         this.x = x;
     }
 
@@ -18,7 +18,7 @@ public class Car {
         return this.y;
     }
 
-    public void setY(Integer y) {
+    public void setY(int y) {
         this.y = y;
     }
 
