@@ -9,6 +9,8 @@ import model.Room;
 public class Simulator {
 
     private boolean isCrashed = false;
+    private Car car = new Car();
+    private Room room = new Room();
 
     /**
      * Get the user input about the room size and the starting destionation of the
@@ -16,9 +18,9 @@ public class Simulator {
      * 
      */
     public void startSimulator() throws IOException {
-        var room = setRoomSize();
-        var car = setStartDest();
-        runSimulation(car, room);
+        setRoomSize();
+        setStartDest();
+        runSimulation();
     }
 
     /**
@@ -27,14 +29,13 @@ public class Simulator {
      * If it was wrong format it will ask the user again until the user have writed
      * the correct input.
      */
-    private Room setRoomSize() throws IOException {
+    private void setRoomSize() throws IOException {
         BufferedReader standardInput = new BufferedReader(new InputStreamReader(System.in));
         String wrongInput = "The input must be written with two integers separated with a space. Example: 4 10";
         boolean isCorrect = false;
         while (!isCorrect) {
             System.out.print("Enter room size:");
             String romeSize = standardInput.readLine();
-            Room room = new Room();
             if (romeSize.contains(" ")) {
                 var numbers = romeSize.split(" ");
                 if (isNumeric(numbers[0]) && isNumeric(numbers[1])) {
@@ -44,14 +45,10 @@ public class Simulator {
                 } else {
                     System.out.println(wrongInput);
                 }
-
-                return room;
             } else {
                 System.out.println(wrongInput);
             }
         }
-
-        return null;
 
     }
 
@@ -62,17 +59,17 @@ public class Simulator {
      * If it was wrong format it will ask the user again until the user have writed
      * the correct input.
      */
-    private Car setStartDest() throws IOException {
+    private void setStartDest() throws IOException {
         BufferedReader standardInput = new BufferedReader(new InputStreamReader(System.in));
         String wrongInput = "This input must be two integers and one letter separated with spaces. The letter can be N, S, W or E.";
         boolean isCorrect = false;
         while (!isCorrect) {
             System.out.print("Enter car starting point:");
             String startDestString = standardInput.readLine();
-            Car car = new Car();
             if (startDestString.contains(" ")) {
                 String[] startDest = startDestString.split(" ");
-                if (isNumeric(startDest[0]) && isNumeric(startDest[1]) && isDestination(startDest[2])) {
+                if (startDest.length == 3 && isNumeric(startDest[0]) && isNumeric(startDest[1])
+                        && isDestination(startDest[2])) {
                     car.setX(Integer.parseInt(startDest[0]));
                     car.setY(Integer.parseInt(startDest[1]));
                     car.setDirection(startDest[2].toUpperCase());
@@ -81,59 +78,53 @@ public class Simulator {
                     System.out.println(wrongInput);
                 }
 
-                return car;
             } else {
                 System.out.println(wrongInput);
             }
         }
-
-        return null;
 
     }
 
     /**
      * Ask user to write commands and the start the simulation.
      * 
-     * When simulation is done it checks if the car has crashed in to the wall or
+     * When simulation is done it prints if the car has crashed in to the wall or
      * not.
      */
-    private void runSimulation(Car car, Room room) throws IOException {
+    private void runSimulation() throws IOException {
         BufferedReader standardInput = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Input car simulation commands in series. Available commands are F, B, L or R.");
+        System.out.print("Input car simulation commands in series. Available commands are F, B, L or R: ");
         String simulationInput = standardInput.readLine();
         char arr[] = simulationInput.toUpperCase().toCharArray();
-        Car carAfterSimulation = simulationAlgorithm(car, arr, room);
-        printResult(carAfterSimulation, room);
+        simulationAlgorithm(arr);
+        printResult();
 
     }
 
     /**
-     * Takes in the cars starting destionation and the commands in a char array and
-     * runs it through the simulation algorithm.
+     * Takes in the the commands in a char array and runs it through the simulation
+     * algorithm.
      * 
-     * After the method has gone through all commands from the user, the method
-     * stops and returns a Car with the end destination
      */
-    private Car simulationAlgorithm(Car car, char[] arr, Room room) {
+    private void simulationAlgorithm(char[] arr) {
         for (char c : arr) {
             String turn = String.valueOf(c);
             if (!isCrashed) {
                 if (turn.equals("L") || turn.equals("R")) {
-                    car = switchDirection(turn, car);
+                    switchDirection(turn);
                 }
                 if (turn.equals("F") || turn.equals("B")) {
-                    car = move(turn, car, room);
+                    move(turn);
                 }
             }
 
         }
-        return car;
     }
 
     /**
      * Checks if the car is inside of the room or if it has crashed in to the wall.
      */
-    private void printResult(Car car, Room room) {
+    private void printResult() {
         if (isCrashed) {
             System.out.println("Failure!");
             System.out.println("The car did hit the wall in the simulation at: " + "(" + car.getX() + "," + car.getY()
@@ -157,23 +148,15 @@ public class Simulator {
 
     /**
      * 
-     * @String input parameter turn, user turn which can be F(Forward) & B(Back)
-     * @Car input parameter car, the current car object with direction and X,Y
-     *      cordinates.
-     * 
-     *      The function returns Car object with new X,Y cordinates based on which
-     *      turn the user have chosen.
+     * Uses the current direction to chose which directon the car should mode.
      */
-    private Car move(String turn, Car car, Room room) {
+    private void move(String turn) {
         String direction = car.getDirection();
         switch (direction) {
             case "N":
                 if (turn.equals("F") && car.getY() != room.getY()) {
                     car.setY(car.getY() + 1);
-                } else {
-                    isCrashed = true;
-                }
-                if (car.getY() != 0) {
+                } else if (turn.equals("B") && car.getY() != 0) {
                     car.setY(car.getY() - 1);
                 } else {
                     isCrashed = true;
@@ -181,11 +164,9 @@ public class Simulator {
                 break;
             case "S":
                 if (turn.equals("F") && car.getY() != 0) {
+
                     car.setY(car.getY() - 1);
-                } else {
-                    isCrashed = true;
-                }
-                if (car.getY() != room.getY()) {
+                } else if (turn.equals("B") && car.getY() != room.getY()) {
                     car.setY(car.getY() + 1);
                 } else {
                     isCrashed = true;
@@ -194,45 +175,32 @@ public class Simulator {
             case "W":
                 if (turn.equals("F") && car.getX() != 0) {
                     car.setX(car.getX() - 1);
-                } else {
-                    isCrashed = true;
-                }
-                if (car.getX() != room.getX()) {
-                    car.setX(car.getX() + 1);
+                } else if (turn.equals("B") && car.getX() != 0) {
+                    car.setX(car.getX() - 1);
                 } else {
                     isCrashed = true;
                 }
                 break;
             case "E":
-                if (turn.equals("F") && car.getX() != room.getX()) {
+                if (car.getX() != room.getX()) {
                     car.setX(car.getX() + 1);
-                } else {
-                    isCrashed = true;
-                }
-                if (car.getX() != 0) {
+                    break;
+                } else if (turn.equals("B") && car.getX() != 0) {
                     car.setX(car.getX() - 1);
                 } else {
                     isCrashed = true;
                 }
                 break;
         }
-        car.setDirection(direction);
-        return car;
 
     }
 
     /**
      * 
-     * @String input parameter turn, which can be F(Forward) & B(Back)
-     * @Car input parameter car, the current car object with direction and X,Y
-     *      cordinates.
-     * 
-     *      The function returns Car object with new direction based on the turn the
-     *      user has chosen.
-     * 
+     * Uses the current direction to chose which directon the car should rotate to.
      */
 
-    private Car switchDirection(String turn, Car car) {
+    private void switchDirection(String turn) {
         String direction = car.getDirection();
         switch (direction) {
             case "N":
@@ -262,6 +230,5 @@ public class Simulator {
 
         }
         car.setDirection(direction);
-        return car;
     }
 }
